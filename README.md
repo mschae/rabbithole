@@ -2,6 +2,7 @@
 [![Build Status](https://magnum.travis-ci.com/mschae/rabbithole.png?token=HyKTvE1fxieHwUy7Yg3w&branch=master)](https://magnum.travis-ci.com/mschae/rabbithole)
 [![Code Climate](https://codeclimate.com/github/mschae/rabbithole.png)](https://codeclimate.com/github/mschae/rabbithole)
 [![Coverage Status](https://coveralls.io/repos/mschae/rabbithole/badge.png)](https://coveralls.io/r/mschae/rabbithole)
+[![Dependency Status](https://gemnasium.com/mschae/rabbithole.png)](https://gemnasium.com/mschae/rabbithole)
 
 The idea of this gem is to mimick Resque: It can use the same worker classes and enqueueing works similar, too.
 The reason is that I really like Resque and how it does things. The only problem with it is the backend. This is not what Redis is there for any good in.
