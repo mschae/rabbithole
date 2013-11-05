@@ -8,8 +8,8 @@ rvm:
   - "ree"
 notifications:
   email: mschaefermeyer@bleacherreport.com
-  services:
-    - rabbitmq
-  branches:
-    only:
-      - master
+services:
+  - rabbitmq
+branches:
+  only:
+    - master
