@@ -1,6 +1,5 @@
 nguage: ruby
 bundler_args: --without development
-before_script: "./bin/ci/before_build.sh"
 script: "bundle exec rspec -cfs spec"
 rvm:
   - "2.0"
