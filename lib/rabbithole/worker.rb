@@ -14,7 +14,7 @@ module Rabbithole
       @threads << queue.subscribe(:ack => true, :block => false) do |delivery_info, properties, payload|
         data = MultiJson.load(payload)
         begin
-          Object.const_get(data['klass']).perform
+          Object.const_get(data['klass']).perform(*data['args'])
           channel.acknowledge(delivery_info.delivery_tag, false)
         rescue => e
           handle_error(e)

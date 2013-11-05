@@ -20,4 +20,15 @@ describe Rabbithole::Worker do
     subject.stop_listening
   end
 
+  it 'passes the correct arguments to the perform action' do
+    class BarJob
+      def self.perform(arg1, arg2); end
+    end
+    BarJob.should_receive(:perform).with(1, 'a').once
+    Rabbithole.enqueue(BarJob, 1, 'a')
+    subject.listen_to_queue(Rabbithole::Connection::DEFAULT_QUEUE)
+    wait_for { Rabbithole::Connection.default_queue.message_count > 0 }
+    subject.stop_listening
+  end
+
 end
