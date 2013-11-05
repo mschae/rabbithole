@@ -1,0 +1,16 @@
+nguage: ruby
+bundler_args: --without development
+before_script: "./bin/ci/before_build.sh"
+script: "bundle exec rspec -cfs spec"
+rvm:
+  - "2.0"
+  - "1.9.3"
+  - "1.8.7"
+  - "ree"
+notifications:
+  email: mschaefermeyer@bleacherreport.com
+  services:
+    - rabbitmq
+  branches:
+    only:
+      - master
