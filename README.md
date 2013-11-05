@@ -33,7 +33,7 @@ end
 ```
 
 Enqueue the job:
-```
+```ruby
 Rabbithole.enqueue MyAwesomeJob
 ```
 
