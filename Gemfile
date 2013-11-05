@@ -5,7 +5,7 @@ group :test do
   gem 'bundler', '~> 1.3'
   gem 'rake'
   gem 'rspec', '~> 2.14'
-  gem 'codeclimate-test-reporter', :require => false
+  gem 'coveralls', :require => false, :platform => [:ruby_19, :ruby_20]
 end
 
 group :development do
