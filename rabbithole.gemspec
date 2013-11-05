@@ -21,9 +21,4 @@ Gem::Specification.new do |spec|
   spec.add_dependency "bunny", "~> 1.0.0"
   spec.add_dependency "settingslogic", "~> 2.0.9"
   spec.add_dependency "multi_json", "~> 1.0"
-
-  spec.add_development_dependency "bundler", "~> 1.3"
-  spec.add_development_dependency "rake"
-  spec.add_development_dependency "guard-rspec", "~> 4.0.3"
-  spec.add_development_dependency "simplecov", "~> 0.7.1"
 end
