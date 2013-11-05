@@ -3,5 +3,5 @@ test:
   port: 5672
   management_port: 15672
   vhost: '/rabbithole-test'
-  user: guest
-  password: guest
+  user: rabbithole-test-user
+  password: rabbithole-test-password

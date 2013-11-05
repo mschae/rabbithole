@@ -14,23 +14,19 @@ Dir[ROOT.join("spec/support/**/*.rb")].each {|f| require f}
 RSpec.configure do |config|
   config.mock_with :rspec
 
-  config.before :all do
+  config.before :suite do
     # Create test vhost
-    request = Net::HTTP::Put.new('/api/vhosts/%2Frabbithole-test', 'Content-Type' => 'application/json')
-    request.basic_auth Rabbithole::Connection::Settings.user, Rabbithole::Connection::Settings.password
-    Net::HTTP.new(Rabbithole::Connection::Settings.host, Rabbithole::Connection::Settings.port + 10000).start {|http| http.request(request) }
-
-    # Grant permission on test vhost
-    request = Net::HTTP::Put.new('/api/permissions/%2Frabbithole-test/guest', 'Content-Type' => 'application/json')
-    request.basic_auth Rabbithole::Connection::Settings.user, Rabbithole::Connection::Settings.password
-    request.body = '{"configure":".*","write":".*","read":".*"}'
-    Net::HTTP.new(Rabbithole::Connection::Settings.host, Rabbithole::Connection::Settings.port + 10000).start {|http| http.request(request) }
+    %x{
+      rabbitmqctl add_vhost #{Rabbithole::Connection::Settings.vhost}
+      rabbitmqctl add_user #{Rabbithole::Connection::Settings.user} #{Rabbithole::Connection::Settings.password}
+      rabbitmqctl set_permissions -p #{Rabbithole::Connection::Settings.vhost} #{Rabbithole::Connection::Settings.user} ".*" ".*" ".*"
+    }
   end
 
-  config.after :all do
-    # Delete test vhost
-    request = Net::HTTP::Delete.new('/api/vhosts/%2Frabbithole-test', 'Content-Type' => 'application/json')
-    request.basic_auth Rabbithole::Connection::Settings.user, Rabbithole::Connection::Settings.password
-    Net::HTTP.new(Rabbithole::Connection::Settings.host, Rabbithole::Connection::Settings.port + 10000).start {|http| http.request(request) }
+  config.after :suite do
+    %x{
+      rabbitmqctl delete_vhost #{Rabbithole::Connection::Settings.vhost}
+      rabbitmqctl delete_user #{Rabbithole::Connection::Settings.user}
+    }
   end
 end
