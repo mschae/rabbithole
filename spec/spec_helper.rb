@@ -1,6 +1,6 @@
-unless ENV['CI']
-  require 'simplecov'
-  SimpleCov.start
+if RUBY_VERSION =~ /^(1\.9|2)/
+  require 'coveralls'
+  Coveralls.wear!
 end
 
 require 'rspec'
