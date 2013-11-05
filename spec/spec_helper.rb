@@ -13,8 +13,11 @@ Dir[ROOT.join("spec/support/**/*.rb")].each {|f| require f}
 
 RABBITCTL_COMMAND = ENV['TRAVIS'] ? 'sudo rabbitmqctl' : 'rabbitmqctl'
 
+Thread.abort_on_exception = true
+
 RSpec.configure do |config|
   config.mock_with :rspec
+  config.include WaitForHelpers
 
   config.before :suite do
     # Create test vhost
@@ -23,6 +26,9 @@ RSpec.configure do |config|
       #{RABBITCTL_COMMAND} add_user #{Rabbithole::Connection::Settings.user} #{Rabbithole::Connection::Settings.password}
       #{RABBITCTL_COMMAND} set_permissions -p #{Rabbithole::Connection::Settings.vhost} #{Rabbithole::Connection::Settings.user} ".*" ".*" ".*"
     }
+    unless ENV['TRAVIS']
+      %x{#{RABBITCTL_COMMAND} set_permissions -p #{Rabbithole::Connection::Settings.vhost} guest ".*" ".*" ".*"}
+    end
   end
 
   config.after :suite do

@@ -4,6 +4,7 @@ require "multi_json"
 
 module Rabbithole
   autoload :Connection, 'rabbithole/connection'
+  autoload :Worker, 'rabbithole/worker'
 
   def self.enqueue(klass, *args)
     if klass.is_a?(Class)

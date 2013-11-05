@@ -8,6 +8,7 @@ describe Rabbithole do
 
     expect {
       described_class.enqueue(FooJob)
+      wait_for { Rabbithole::Connection.default_queue.message_count > 0 }
     }.to change { Rabbithole::Connection.default_queue.message_count }.by 1
     Rabbithole::Connection.default_queue.pop
   end
@@ -29,10 +30,12 @@ describe Rabbithole do
 
       expect {
         Rabbithole.enqueue(BarJob)
+        wait_for { Rabbithole::Connection.queue('barqueue').message_count > 0 }
       }.to change {Rabbithole::Connection.queue('barqueue').message_count}.by 1
 
       expect {
         Rabbithole.enqueue(BarJob)
+        wait_for { Rabbithole::Connection.queue('barqueue').message_count > 0 }
       }.not_to change {Rabbithole::Connection.default_queue}
 
     end

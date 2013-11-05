@@ -7,10 +7,10 @@ module Rabbithole
     DEFAULT_QUEUE = 'default_queue'
 
     class << self
-      def publish(queue, payload)
+      def publish(queue_name, payload)
         channel = create_channel
-        channel.queue(get_queue_name(queue))
-        channel.default_exchange.publish(payload, :routing_key => get_queue_name(queue))
+        queue(queue_name)
+        channel.default_exchange.publish(payload, :routing_key => get_queue_name(queue_name))
         channel.close
       end
 
@@ -22,8 +22,8 @@ module Rabbithole
         "#{QUEUE_PREFIX}.#{queue}"
       end
 
-      def queue(name)
-        channel.queue(get_queue_name(name))
+      def queue(name, channel = self.channel)
+        channel.queue(get_queue_name(name), :durable => true)
       end
 
       def session
@@ -34,8 +34,8 @@ module Rabbithole
           end
       end
 
-      def create_channel
-        self.session.create_channel
+      def create_channel(worker_pool_size = 1, name = nil)
+        self.session.create_channel(name, worker_pool_size)
       end
 
       def configuration
