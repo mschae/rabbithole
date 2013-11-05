@@ -17,6 +17,7 @@ module Rabbithole
           Object.const_get(data['klass']).perform(*data['args'])
           channel.acknowledge(delivery_info.delivery_tag, false)
         rescue => e
+          channel.reject(delivery_info.delivery_tag, !delivery_info.redelivered)
           handle_error(e)
         end
       end

@@ -31,4 +31,16 @@ describe Rabbithole::Worker do
     subject.stop_listening
   end
 
+  it 'gracefully handles failing jobs' do
+    class BazJob
+      def self.perform
+        raise 'hell'
+      end
+    end
+    subject.should_receive(:handle_error).twice
+    subject.listen_to_queue(Rabbithole::Connection::DEFAULT_QUEUE)
+    Rabbithole.enqueue(BazJob)
+    wait_for { Rabbithole::Connection.default_queue.message_count > 0 }
+  end
+
 end
