@@ -1,5 +1,5 @@
 # Rabbithole
-[![Build Status](https://magnum.travis-ci.com/mschae/rabbithole.png?token=HyKTvE1fxieHwUy7Yg3w&branch=master)](https://magnum.travis-ci.com/mschae/rabbithole)
+[![Build Status](https://travis-ci.org/mschae/rabbithole.png)](https://travis-ci.org/mschae/rabbithole)
 [![Code Climate](https://codeclimate.com/github/mschae/rabbithole.png)](https://codeclimate.com/github/mschae/rabbithole)
 [![Coverage Status](https://coveralls.io/repos/mschae/rabbithole/badge.png)](https://coveralls.io/r/mschae/rabbithole)
 [![Dependency Status](https://gemnasium.com/mschae/rabbithole.png)](https://gemnasium.com/mschae/rabbithole)
