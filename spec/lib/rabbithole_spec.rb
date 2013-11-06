@@ -1,16 +1,14 @@
 require 'spec_helper'
 
 describe Rabbithole do
-  it 'enqueues defined jobs' do
+  it 'enqueues well defined jobs' do
     class FooJob
       def self.perform(*args); end
     end
 
     expect {
       described_class.enqueue(FooJob)
-      wait_for { Rabbithole::Connection.default_queue.message_count > 0 }
     }.to change { Rabbithole::Connection.default_queue.message_count }.by 1
-    Rabbithole::Connection.default_queue.pop
   end
 
   it 'fails to enqueue a job that does not define a perform method' do
@@ -31,13 +29,11 @@ describe Rabbithole do
 
       expect {
         Rabbithole.enqueue(BarJob)
-        wait_for { Rabbithole::Connection.queue('barqueue').message_count > 0 }
       }.to change {Rabbithole::Connection.queue('barqueue').message_count}.by 1
       Rabbithole::Connection.queue('barqueue').pop
 
       expect {
         Rabbithole.enqueue(BarJob)
-        wait_for { Rabbithole::Connection.queue('barqueue').message_count > 0 }
       }.not_to change {Rabbithole::Connection.default_queue}
       Rabbithole::Connection.queue('barqueue').pop
     end

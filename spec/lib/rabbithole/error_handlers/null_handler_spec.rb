@@ -12,14 +12,14 @@ describe Rabbithole::ErrorHandlers::NullHandler do
   end
 
   it 'does absolutely nothing on errors' do
-    class BazJob
+    class NullHandlerTestJob
       def self.perform
         raise 'hell'
       end
     end
 
-    Rabbithole.enqueue(BazJob)
-    wait_for { Rabbithole::Connection.default_queue.message_count > 0 }
-    wait_for { Rabbithole::Connection.default_queue.message_count == 0 }
+    Rabbithole.enqueue(NullHandlerTestJob)
+    sleep 0.5
+    Rabbithole::Connection.default_queue.message_count.should == 0
   end
 end

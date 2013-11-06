@@ -10,16 +10,18 @@ describe Rabbithole::ErrorHandlers::RaiseHandler do
   after :each do
     worker.stop_listening
   end
+
   it 'should raise errors' do
-    class BazJob
+    class RaiseHandlerTestjob
       def self.perform
         raise 'hell'
       end
     end
 
     expect {
-      Rabbithole.enqueue(BazJob)
-      wait_for { Rabbithole::Connection.default_queue.message_count > 0 }
+      Rabbithole.enqueue(RaiseHandlerTestjob)
+      sleep 0.5
     }.to raise_error
+    Rabbithole::Connection.default_queue.message_count.should == 0
   end
 end

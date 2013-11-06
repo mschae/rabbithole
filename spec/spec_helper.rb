@@ -4,6 +4,7 @@ if RUBY_VERSION =~ /^(1\.9|2)/
 end
 
 require 'rspec'
+require 'pry'
 
 ROOT = Pathname.new(__FILE__).dirname.join('..')
 require ROOT.join('lib', 'rabbithole')
@@ -17,7 +18,6 @@ Thread.abort_on_exception = true
 
 RSpec.configure do |config|
   config.mock_with :rspec
-  config.include WaitForHelpers
 
   config.before :suite do
     # Create test vhost

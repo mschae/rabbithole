@@ -10,37 +10,34 @@ describe Rabbithole::Worker do
   end
 
   it 'invokes the perform action' do
-    class FooJob
+    class InvokeTestJob
       def self.perform; end
     end
 
-    FooJob.should_receive(:perform).once
-    Rabbithole.enqueue(FooJob)
-    wait_for { Rabbithole::Connection.default_queue.message_count > 0 }
-    wait_for { Rabbithole::Connection.default_queue.message_count == 0 }
+    InvokeTestJob.should_receive(:perform)
+    Rabbithole.enqueue(InvokeTestJob)
+    sleep 0.5
   end
 
   it 'passes the correct arguments to the perform action' do
-    class BarJob
+    class ArgumentsTestJob
       def self.perform(arg1, arg2); end
     end
 
-    BarJob.should_receive(:perform).with(1, 'a').once
-    Rabbithole.enqueue(BarJob, 1, 'a')
-    wait_for { Rabbithole::Connection.default_queue.message_count > 0 }
-    wait_for { Rabbithole::Connection.default_queue.message_count == 0 }
+    ArgumentsTestJob.should_receive(:perform).with(1, 'a').once
+    Rabbithole.enqueue(ArgumentsTestJob, 1, 'a')
+    sleep 1
   end
 
   it 'gracefully handles failing jobs' do
-    class BazJob
+    class HandlingFailsJob
       def self.perform
         raise 'hell'
       end
     end
 
     Rabbithole::ErrorHandler.should_receive(:handle).twice
-    Rabbithole.enqueue(BazJob)
-    wait_for { Rabbithole::Connection.default_queue.message_count > 0 }
-    wait_for { Rabbithole::Connection.default_queue.message_count == 0 }
+    Rabbithole.enqueue(HandlingFailsJob)
+    sleep 0.5
   end
 end
