@@ -1,18 +1,31 @@
 module Rabbithole
   class Worker
+    @@error_handler = Rabbithole::ErrorHandlers::RaiseHandler
     attr_reader :number_of_threads
 
     def initialize(number_of_threads = 1)
       @number_of_threads = number_of_threads
-      @threads           = []
+      @consumers         = []
     end
 
     def listen_to_queue(queue_name)
       channel = Connection.create_channel(number_of_threads)
-      queue = Connection.queue(queue_name, channel)
+      queue   = Connection.queue(queue_name, channel)
+      @consumers << start_consumer(queue, channel)
+    end
 
-      @threads << queue.subscribe(:ack => true, :block => false) do |delivery_info, properties, payload|
-        data = MultiJson.load(payload)
+    def stop_listening
+      @consumers.each(&:cancel)
+    end
+
+    def handle_error(error)
+      error_handler.handle(error)
+    end
+
+    private
+    def start_consumer(queue, channel)
+      queue.subscribe(:ack => true, :block => false) do |delivery_info, properties, payload|
+        data = MessagePack.unpack(payload)
         begin
           Object.const_get(data['klass']).perform(*data['args'])
           channel.acknowledge(delivery_info.delivery_tag, false)
@@ -21,14 +34,6 @@ module Rabbithole
           handle_error(e)
         end
       end
-    end
-
-    def stop_listening
-      @threads.each(&:cancel)
-    end
-
-    def handle_error(error)
-
     end
   end
 end

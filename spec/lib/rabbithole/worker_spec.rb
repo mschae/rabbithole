@@ -40,5 +40,4 @@ describe Rabbithole::Worker do
     Rabbithole.enqueue(BazJob)
     wait_for { Rabbithole::Connection.default_queue.message_count > 0 }
   end
-
 end
