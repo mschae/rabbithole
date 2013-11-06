@@ -9,7 +9,7 @@ The reason is that I really like Resque and how it does things. The only problem
 
 Rabbithole allows to switch from Resque to a RabbitMQ-based queueing system with ease. And it takes care of the heavy lifting.
 
-I wrote it as part of my job with [Bleacher Report](http://bleacherrerport.com), where we exceeded the scalability of Resque (or rather Redis).
+I wrote it as part of my job with [Bleacher Report](http://bleacherreport.com), where we exceeded the scalability of Resque (or rather Redis).
 
 Rabbithole currently only works with Rails, although I intend to make it work standalone at some point. Please note that it is WIP.
 
