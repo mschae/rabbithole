@@ -10,7 +10,7 @@ describe Rabbithole do
       described_class.enqueue(FooJob)
       wait_for { Rabbithole::Connection.default_queue.message_count > 0 }
     }.to change { Rabbithole::Connection.default_queue.message_count }.by 1
-    Rabbithole::Connection.default_queue.purge
+    Rabbithole::Connection.default_queue.pop
   end
 
   it 'fails to enqueue a job that does not define a perform method' do
@@ -39,7 +39,8 @@ describe Rabbithole do
         Rabbithole.enqueue(BarJob)
         wait_for { Rabbithole::Connection.queue('barqueue').message_count > 0 }
       }.not_to change {Rabbithole::Connection.default_queue}
-      Rabbithole::Connection.queue('barqueue').purge
+      Rabbithole::Connection.queue('barqueue').pop
+   op
     end
   end
 end
