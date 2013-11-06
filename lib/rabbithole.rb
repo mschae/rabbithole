@@ -5,6 +5,7 @@ require "msgpack"
 module Rabbithole
   autoload :Connection, 'rabbithole/connection'
   autoload :Worker, 'rabbithole/worker'
+  autoload :ErrorHandler, 'rabbithole/error_handler'
   module ErrorHandlers
     autoload :NullHandler, 'rabbithole/error_handlers/null_handler'
     autoload :RaiseHandler, 'rabbithole/error_handlers/raise_handler'

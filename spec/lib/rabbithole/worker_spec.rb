@@ -17,6 +17,7 @@ describe Rabbithole::Worker do
     FooJob.should_receive(:perform).once
     Rabbithole.enqueue(FooJob)
     wait_for { Rabbithole::Connection.default_queue.message_count > 0 }
+    wait_for { Rabbithole::Connection.default_queue.message_count == 0 }
   end
 
   it 'passes the correct arguments to the perform action' do
@@ -27,6 +28,7 @@ describe Rabbithole::Worker do
     BarJob.should_receive(:perform).with(1, 'a').once
     Rabbithole.enqueue(BarJob, 1, 'a')
     wait_for { Rabbithole::Connection.default_queue.message_count > 0 }
+    wait_for { Rabbithole::Connection.default_queue.message_count == 0 }
   end
 
   it 'gracefully handles failing jobs' do
@@ -36,8 +38,9 @@ describe Rabbithole::Worker do
       end
     end
 
-    subject.should_receive(:handle_error).twice
+    Rabbithole::ErrorHandler.should_receive(:handle).twice
     Rabbithole.enqueue(BazJob)
     wait_for { Rabbithole::Connection.default_queue.message_count > 0 }
+    wait_for { Rabbithole::Connection.default_queue.message_count == 0 }
   end
 end

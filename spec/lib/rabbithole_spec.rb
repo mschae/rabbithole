@@ -10,15 +10,16 @@ describe Rabbithole do
       described_class.enqueue(FooJob)
       wait_for { Rabbithole::Connection.default_queue.message_count > 0 }
     }.to change { Rabbithole::Connection.default_queue.message_count }.by 1
-    Rabbithole::Connection.default_queue.pop
+    Rabbithole::Connection.default_queue.purge
   end
 
   it 'fails to enqueue a job that does not define a perform method' do
     class BazClass
     end
 
-    expect { described_class.enqueue(BazClass) }.to raise_error Rabbithole::InvalidJobError
-    Rabbithole::Connection.default_queue.message_count.should == 0
+    expect do
+      expect { described_class.enqueue(BazClass) }.to raise_error Rabbithole::InvalidJobError
+    end.to_not change {Rabbithole::Connection.default_queue.message_count }
   end
 
   context 'queues' do
@@ -32,12 +33,13 @@ describe Rabbithole do
         Rabbithole.enqueue(BarJob)
         wait_for { Rabbithole::Connection.queue('barqueue').message_count > 0 }
       }.to change {Rabbithole::Connection.queue('barqueue').message_count}.by 1
+      Rabbithole::Connection.queue('barqueue').pop
 
       expect {
         Rabbithole.enqueue(BarJob)
         wait_for { Rabbithole::Connection.queue('barqueue').message_count > 0 }
       }.not_to change {Rabbithole::Connection.default_queue}
-
+      Rabbithole::Connection.queue('barqueue').purge
     end
   end
 end

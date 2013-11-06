@@ -1,6 +1,5 @@
 module Rabbithole
   class Worker
-    @@error_handler = Rabbithole::ErrorHandlers::RaiseHandler
     attr_reader :number_of_threads
 
     def initialize(number_of_threads = 1)
@@ -18,10 +17,6 @@ module Rabbithole
       @consumers.each(&:cancel)
     end
 
-    def handle_error(error)
-      error_handler.handle(error)
-    end
-
     private
     def start_consumer(queue, channel)
       queue.subscribe(:ack => true, :block => false) do |delivery_info, properties, payload|
@@ -31,7 +26,7 @@ module Rabbithole
           channel.acknowledge(delivery_info.delivery_tag, false)
         rescue => e
           channel.reject(delivery_info.delivery_tag, !delivery_info.redelivered)
-          handle_error(e)
+          ErrorHandler.handle(e)
         end
       end
     end
