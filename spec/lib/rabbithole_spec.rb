@@ -40,7 +40,6 @@ describe Rabbithole do
         wait_for { Rabbithole::Connection.queue('barqueue').message_count > 0 }
       }.not_to change {Rabbithole::Connection.default_queue}
       Rabbithole::Connection.queue('barqueue').pop
-   op
     end
   end
 end
