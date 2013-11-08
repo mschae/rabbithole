@@ -29,7 +29,8 @@ Or install it yourself as:
 
 ## Usage
 
-Define a job, make sure it has a `perform` method:
+### Defining jobs
+When defining a job, make sure it has a `perform` method:
 ```ruby
 class MyAwesomeJob
   def self.perform
@@ -38,12 +39,32 @@ class MyAwesomeJob
 end
 ```
 
-Enqueue the job:
+### Enqueueing jobs:
 ```ruby
 Rabbithole.enqueue MyAwesomeJob
 ```
 
-Be done with it.
+You can pass arguments to the perform method like so:
+```ruby
+Rabbithole.enqueue MyAwesomeJob, arg1, arg2
+```
+
+Gotchas:
+
+* The number of arguments you pass in has to match the arity of your perform function.
+* Also Hash keys will end up as strings in the perform function, even if they were passed as symbols.
+* Only serializable arguments are supported. Passing in arbitrary objects will not work.
+
+### Running jobs
+You will have to invoke the binary and specify the queues you want to execute. **As opposed to resque, the queue * denotes the default queue, not all queues!**
+
+Example:
+
+    bundle exec rabbithole work --queues "*" cache
+
+For further options type `rabbithole help work`.
+
+
 
 ## Contributing
 
