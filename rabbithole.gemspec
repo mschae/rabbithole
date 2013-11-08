@@ -21,4 +21,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency "bunny", "~> 1.0.0"
   spec.add_dependency "settingslogic", "~> 2.0.9"
   spec.add_dependency "msgpack", "~> 0.5"
+  spec.add_dependency "thor", "~> 0.18"
 end

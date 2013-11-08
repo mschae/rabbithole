@@ -3,7 +3,7 @@ require 'bunny'
 
 module Rabbithole
   class Connection
-    QUEUE_PREFIX  = 'rabbithole'
+    QUEUE_PREFIX  = "rabbithole/#{Rails.application.class.parent_name.downcase}"
     DEFAULT_QUEUE = 'default_queue'
 
     class << self
