@@ -29,7 +29,7 @@ module Rabbithole
           @channel.acknowledge(delivery_info.delivery_tag, false)
         rescue => e
           @channel.reject(delivery_info.delivery_tag, !delivery_info.redelivered)
-          ErrorHandler.handle(e)
+          ErrorHandler.handle(e, queue.name, payload)
         end
       end
     end

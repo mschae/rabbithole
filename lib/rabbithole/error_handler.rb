@@ -3,8 +3,8 @@ module Rabbithole
     class << self
       @@registered_handler = Rabbithole::ErrorHandlers::RaiseHandler
 
-      def handle(error)
-        @@registered_handler.handle(error)
+      def handle(error, queue, payload)
+        @@registered_handler.handle(error, queue, payload)
       end
 
       def register_handler(handler)
