@@ -5,6 +5,7 @@ module Rabbithole
     def initialize(number_of_threads = 1)
       @number_of_threads = number_of_threads
       @channel           = Connection.create_channel(number_of_threads)
+      @channel.prefetch(number_of_threads * 5)
     end
 
     def listen_to_queue(queue_name)
