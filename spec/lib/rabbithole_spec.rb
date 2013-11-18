@@ -21,12 +21,12 @@ describe Rabbithole do
   end
 
   context 'queues' do
-    it 'allows to specify a queue' do
-      class BarJob
-        @queue = 'barqueue'
-        def self.perform; end
-      end
+    class BarJob
+      @queue = 'barqueue'
+      def self.perform; end
+    end
 
+    it 'allows to specify a queue' do
       expect {
         Rabbithole.enqueue(BarJob)
       }.to change {Rabbithole::Connection.queue('barqueue').message_count}.by 1
@@ -36,6 +36,12 @@ describe Rabbithole do
         Rabbithole.enqueue(BarJob)
       }.not_to change {Rabbithole::Connection.default_queue}
       Rabbithole::Connection.queue('barqueue').pop
+    end
+
+    it 'can be purged' do
+      Rabbithole.enqueue(BarJob)
+      Rabbithole.purge(BarJob)
+      Rabbithole::Connection.queue('barqueue').message_count.should == 0
     end
   end
 end

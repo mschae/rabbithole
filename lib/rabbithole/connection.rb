@@ -14,6 +14,10 @@ module Rabbithole
         channel.close
       end
 
+      def purge(queue_name)
+        queue(queue_name).purge
+      end
+
       def default_queue
         queue DEFAULT_QUEUE
       end
